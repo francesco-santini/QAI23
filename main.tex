@@ -1,0 +1,160 @@
+\documentclass[conference]{IEEEtran}
+\IEEEoverridecommandlockouts
+% The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
+\usepackage{cite}
+\usepackage{amsmath,amssymb,amsxtra,amsfonts,cancel}
+\usepackage{xspace}
+\usepackage{algorithmic}
+\usepackage{graphicx}
+\usepackage{textcomp}
+\usepackage{xcolor}
+\usepackage{xurl}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+
+\newcommand{\powerset}[1]{\ensuremath{2^{#1}}} % power set
+\newcommand{\AF}{\ensuremath{\mathcal{F}}\xspace} % Abstract argumentation framework
+\newcommand{\F}{\ensuremath{\mathcal{F}}\xspace} % Abstract argumentation framework
+\newcommand{\args}{\ensuremath{\mathsf{A}}\xspace} % Set of arguments
+\newcommand{\atts}{\ensuremath{\rightarrow}\xspace}
+\newcommand{\attackers}[2]{\ensuremath{\mathcal{F}_{#1}(#2)\xspace}} % Attacker set
+\newcommand{\AFC}{\ensuremath{\AF=(\args,\atts)}\xspace} % Definition of an abstract argumentation framework
+\newcommand{\cA}{\ensuremath{\mathcal{A}}} % some argument
+\newcommand{\cB}{\ensuremath{\mathcal{B}}} % some argument
+\newcommand{\cC}{\ensuremath{\mathcal{C}}} % some argument
+\newcommand{\argin}{\ensuremath{\mathsf{in}}} % argument is in
+\newcommand{\argout}{\ensuremath{\mathsf{out}}} % argument is out
+\newcommand{\argundec}{\ensuremath{\mathsf{undec}}} % argument is undec
+
+\newcommand{\Given}{\textbf{Given}\xspace}
+\newcommand{\decide}{\textbf{decide}\xspace}
+\newcommand{\Enumerate}{\textbf{enumerate}\xspace}
+\newcommand{\return}{\textbf{return}\xspace}
+
+\newcommand{\af}{AF}
+
+\newcommand{\cf}{\mathbf{cf}}
+\newcommand{\ad}{\mathbf{ad}}
+\newcommand{\co}{\mathbf{co}}
+\newcommand{\pr}{\mathbf{pr}}
+\newcommand{\st}{\mathbf{st}}
+\newcommand{\sst}{\mathbf{sst}}
+\newcommand{\stg}{\mathbf{stg}}
+\newcommand{\gr}{\mathbf{gr}}
+\newcommand{\id}{\mathbf{id}}
+
+\newcommand{\se}{\mathbf{SE}}
+\newcommand{\ee}{\mathbf{EE}}
+\newcommand{\dc}{\mathbf{DC}}
+\newcommand{\ds}{\mathbf{DS}}
+\newcommand{\dyn}{\mathbf{D}}
+\newcommand{\ex}{\mathbf{EX}}
+\newcommand{\nem}{\mathbf{NE}}
+
+
+
+
+
+
+\begin{document}
+
+\title{Encoding Extension-based Problems in Argumentation to QUBO}
+
+\author{\IEEEauthorblockN{1\textsuperscript{st} Marco Baioletti}
+\IEEEauthorblockA{\textit{Dipartimento di Matematica e Informatica} \\
+\textit{University of Perugia}\\
+Perugia, Italy \\
+marcol.baioletti@unipg.it}
+\and
+\IEEEauthorblockN{2\textsuperscript{nd} Francesco Santini}
+\IEEEauthorblockA{\textit{Dipartimento di Matematica e Informatica} \\
+\textit{University of Perugia}\\
+Perugia, Italy \\
+francesco.santini@unipg.it}
+}
+
+\maketitle
+
+\begin{abstract}
+????
+\end{abstract}
+
+\begin{IEEEkeywords}
+?????
+\end{IEEEkeywords}
+
+\section{Introduction}\label{sec:intro}
+
+
+\section{Background}\label{sec:background}
+An \emph{Abstract Argumentation Framework} (\af, for short) \cite{Dung:1995}
+is a tuple $\F=(\args,\atts)$ where
+\args is a set of arguments and
+\atts is a relation $\atts\subseteq \args\times\args$.
+For two arguments $a,b\in\args$ the relation $a \atts b$ means that argument $a$ \emph{attacks} argument $b$.
+%For $\cA\in\args$ define $\attackers{\F}{\cA}=\{\cB\mid \cB\atts \cA\}$.
+An argument $a \in \args$ is \emph{defended} by $S \subseteq \args$ (in $\F$)
+if for each $b \in \args$ such that $b \atts a$
+there is some $c \in S$ such that $c \atts b$.
+%Define $F: 2^{\args} \rightarrow 2^{\args}$ via $F(S)  = \{ \cA\in\args \mid S \text{~defends~} \cA\}$ where a set $S\subseteq\args$ defends an argument $\cA$ if for all arguments $\cB\in \args$, if $\cB\atts \cA$ then there is $\cC\in E$ with $\cC\atts \cB$.
+A set $E \subseteq \args$ is \emph{conflict-free} ($\cf$ in \F) if and only if there are no $a,b\in E$ with $a \atts b$.
+$E$ is \emph{admissible} ($\ad$ in \F) if and only if it is conflict-free and each $a \in E$ is defended by $E$.
+Finally, the range of $E$ in $\F$, i.e., $E^{+}_\F$, collects the same $E$ and the set of arguments attacked by $E$: $E^{+}_\F=E \cup \{a\in\args \mid \exists b\in E: b \atts a\}$.
+
+
+The \emph{collective acceptability} of  arguments depends on the definition of
+different \textit{semantics}~\cite{Dung:1995}.  Semantics determine
+sets of jointly acceptable arguments, called \emph{extensions}, by
+mapping each \AFC to a set $\sigma(\F) \subseteq \powerset{\args}$, where $\powerset{\args}$ is the  power set of $\args$, and $\sigma$ parametrically stands for any of the considered semantics.
+The extensions under complete, preferred, stable,  and semi-stable
+semantics are defined as follows.
+Given \AFC and a set $E \subseteq \args$, $E \in \co(\F)$ iff $E$ is admissible in $\F$ and if $a \in \args$ is defended by $E$ in $\F$ then $a\in E$;  $E \in \pr(\F)$ iff $E \in \co(\F)$ and there is no $E' \in \co(\F)$ s.t.\ $E' \supset E$; $E \in \sst(\F)$ iff $E \in \co(\F)$ and there is no $E' \in \co(\F)$ s.t.\ $E'^+_\F \supset E^+_\F$; $E \in \st(\F)$ iff $E \in \co(\F)$ and $E^+_\F = \args$,
+
+
+
+
+
+We  now report  the definition of six well-known decision problems in Abstract Argumentation (yes/no answer).
+\emph{Credulous acceptance} $\dc\textit{-}\sigma$: given \AFC and an argument $a \in \args$, is $a$ contained in some $E \in \sigma(\F)$?
+Sceptical acceptance $\ds\textit{-}\sigma$: given \AFC and an argument $a \in \args$, is $a$ contained in all $E \in \sigma(\F)$?
+\emph{Verification of an extension} $\mathit{\textbf{VER}}\textit{-}\sigma$: given \AFC and a set of arguments $E \subseteq \args$, is $E \in \sigma(\F)$?
+\emph{Existence of an extension} $\ex\textit{-}\sigma$: given \AFC, is
+$\sigma(\F) \not= \varnothing$?
+\emph{Existence of non-empty extension}
+$\nem\textit{-}\sigma$: given \AFC, does there exist $E
+\not= \varnothing$ such that $E \in \sigma(\F)$?
+\emph{Uniqueness of the solution} $\mathit{\textbf{UN}}\textit{-}\sigma$: given \AFC, is $\sigma(\F) = \{E\}$?
+
+
+
+\begin{table}[t]
+	\centering
+	\footnotesize
+	\begin{tabular}{ccccccc}
+		&  Ver-$\sigma$ &  DC-$\sigma$ & DS-$\sigma$ & Ex-$\sigma$ &
+		NE-$\sigma$ & UN-$\sigma$ \\
+		Conflict-free & in L & in L & triv.& triv. & in L & in L \\
+		Admissible & in L  & \bf{NP-c} & triv. & triv. &  \bf{NP-c} & coNP-c \\
+		Complete & in L &  \bf{NP-c} & P-c & triv. &  \bf{NP-c} & coNP-c \\
+		Preferred & coNP-c &  \bf{NP-c} & $\prod^{P}_{2}$-c& triv. &  \bf{NP-c} & coNP-c P\\
+		Semi-stable & coNP-c & $\sum^{P}_{2}$-c & $\prod^{P}_{2}$-c & triv. &  \bf{NP-c} & in $\Theta^{p}_{2}$  \\
+		Stable & in L &  \bf{NP-c} & coNP-c &  \bf{NP-c} &  \bf{NP-c} & DP-c\\
+	\end{tabular}
+	\caption{The complexity of some  problems; NP-Complete problems are in bold.}
+	\label{sec:complexity}
+	\vspace{-0.5cm}
+\end{table}
+
+The 2021 edition of the \emph{International Competition on Computational Models of Argumentation} (\emph{ICCMA})\footnote{ICCMA website: \url{https://argumentationcompetition.org/index.html}.} featured a track dedicated to approximate solvers for the first time: only  decision problems $\dc$-$\sigma$ and $\ds$-$\sigma$ we considered. Solvers were evaluated with respect to their accuracy, i.e. the ratio of instances that are correctly solved. The main motivation behind approximate algorithms over exact algorithms was their (potentially) lower execution: the timeout was reduced to 60 seconds, instead of 600.
+
+An approximate solver from ICCMA21 is HARPER++ by M. Thimm: such a solver can only  determine the grounded extension of an input framework and then uses that to approximate results for $\dc$ and $\ds$ tasks concerning $\sigma \in \{\co, \st, \pr, \sst, \stg, \id\}$. A positive answer to $\ds$-$\gr$ implies a positive answer to $\dc$ and $\ds$ for the other semantics. On the contrary, if an argument is attacked by an argument contained in the grounded extension, then the answer to $\dc$ and $\ds$ is negative. According to \cite{CeruttiTV20}, sceptical reasoning with any semantics generally overlaps with reasoning with the grounded semantics on many practical cases. AFGCN, by  Lars Malmqvist, competed in ICCMA21 as well. It uses a Graph Convolutional Network~\cite{WuPCLZY21}, to compute approximate solutions to  $\dc$ and $\ds$ tasks for $\sigma \in \{\co, \st, \pr, \sst, \stg, \id\}$ in a given AF. The model is trained by using a randomized training process using a dataset of AFs from previous ICCMA competitions in order to maximize generalization from the input frameworks. To speed up calculation and  improve accuracy, the solver uses the pre-computed grounded extension as an input feature to the neural network.
+
+
+\section{Conclusion}\label{sec:conclusion}
+
+
+\bibliographystyle{IEEEtran}
+\bibliography{main}
+
+\end{document}
