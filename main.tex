@@ -9,6 +9,7 @@
 \usepackage{textcomp}
 \usepackage{xcolor}
 \usepackage{xurl}
+\usepackage{todonotes}
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
@@ -89,6 +90,8 @@ francesco.santini@unipg.it}
 
 The \emph{Abstract Argumentation} theory of Dung~\cite{Dung:1995} provides the foundation for a lot of current argumentation research. An argumentation framework, which is essentially a directed graph with the arguments represented as nodes and the attack relation represented by arrows, is the key idea in this study. An analysis of the question of which set(s) of arguments can be accepted, given such a network, leads to the definition of an argumentation semantics. 
 
+\todo[inline]{structured and non-structured}
+
 In this regard, a number of proposals have been made in the literature; in Section~\ref{sect:bgarg} we summarise the background on  some NP-complete problems in Abstract Argumentation that are related to \emph{extensions}, which are sets of arguments that can survive the conflict together and thus represent collectively a reasonable position an autonomous reasoner might take. 
 
 
@@ -119,7 +122,7 @@ semantics are defined as follows.
 Given \AFC and a set $E \subseteq \args$, $E \in \co(\F)$ iff $E$ is admissible in $\F$ and if $a \in \args$ is defended by $E$ in $\F$ then $a\in E$;  $E \in \pr(\F)$ iff $E \in \co(\F)$ and there is no $E' \in \co(\F)$ s.t.\ $E' \supset E$; $E \in \sst(\F)$ iff $E \in \co(\F)$ and there is no $E' \in \co(\F)$ s.t.\ $E'^+_\F \supset E^+_\F$; $E \in \st(\F)$ iff $E \in \co(\F)$ and $E^+_\F = \args$,
 
 
-
+\todo[inline]{Esempio anche, con idea di cosa sia un argomento}
 
 
 We  now report  the definition of six well-known decision problems in Abstract Argumentation (yes/no answer).
@@ -152,6 +155,8 @@ $\nem\textit{-}\sigma$: given \AFC, does there exist $E
 	\vspace{-0.5cm}
 \end{table}
 
+\todo[inline]{BG problemi nuovi su cambiamento grafo}
+
 \iffalse
 The 2021 edition of the \emph{International Competition on Computational Models of Argumentation} (\emph{ICCMA})\footnote{ICCMA website: \url{https://argumentationcompetition.org/index.html}.} featured a track dedicated to approximate solvers for the first time: only  decision problems $\dc$-$\sigma$ and $\ds$-$\sigma$ we considered. Solvers were evaluated with respect to their accuracy, i.e. the ratio of instances that are correctly solved. The main motivation behind approximate algorithms over exact algorithms was their (potentially) lower execution: the timeout was reduced to 60 seconds, instead of 600.
 
@@ -159,6 +164,22 @@ An approximate solver from ICCMA21 is HARPER++ by M. Thimm: such a solver can on
 \fi
 
 \subsection{QUBO}\label{sect:qubo}
+\emph{Quadratic Unconstrained Binary Optimization} (\emph{QUBO})~\cite{glover,glover2} is a
+form of optimization problems encompassing e.g. SAT/Constraint/(0,1)-ILP, which  recently gained a great popularity because of fast solvers and dedicated computing devices, such as
+quantum and digital annealers. 
+A QUBO problem is defined in terms of $n$ binary variables $x_1,\dots,x_n$
+and a $n\times n$ upper-diagonal matrix $\mathcal{Q}$ and consists in 
+minimizing the function $f(x) = \sum_{i=1}^n Q_{i,i} x_i + \sum_{i < j}^n Q_{i,j} x_i x_j$.
+The diagonal terms $Q_{i,i}$ are the linear coefficients and the non-zero off-diagonal terms $Q_{i,j}$
+are the quadratic coefficients. This can be expressed more concisely as $\min_{x \in \{0,1\}^n} x^T Q x$, where $x^T$ denotes the transpose of the vector $x$. The formulation of a discrete constrained optimization problem as QUBO requires
+the following steps {\bf i)}  find a binary representation for the solutions {\bf ii)}  define a penalization function, which penalizes unfeasible solutions (i.e., violating a constraint).
+
+\section{Encoding of problems}\label{sect:encoding}
+In \cite{pricai22} we proposed an encoding of two well-known NP-Complete problems in Abstract Argumentation (both considering the complete semantics) as Quadratic Unconstrained Binary Optimization (QUBO) problems, which share the same complexity.  We used Simulated Annealing  to solve QUBO. Moreover, preliminary tests were presented by also comparing the results with a different approximate solver, i.e., Harper++. 
+
+Then, continuing on this research line, we have extended the encoding to all classical NP-Complete problems in Abstract Argumentation using five different semantics, and we have  compared the performance with Harper++ and AFGCN. 
+
+\todo[inline]{Fare rissunto di quello che abbiamo fatto ed  encoding nuovo}
 
 \section{Conclusion}\label{sec:conclusion}
 
