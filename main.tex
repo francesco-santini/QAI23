@@ -65,7 +65,7 @@
 \IEEEauthorblockA{\textit{Dipartimento di Matematica e Informatica} \\
 \textit{University of Perugia}\\
 Perugia, Italy \\
-marcol.baioletti@unipg.it}
+marco.baioletti@unipg.it}
 \and
 \IEEEauthorblockN{2\textsuperscript{nd} Francesco Santini}
 \IEEEauthorblockA{\textit{Dipartimento di Matematica e Informatica} \\
@@ -85,10 +85,17 @@ francesco.santini@unipg.it}
 \end{IEEEkeywords}
 
 \section{Introduction}\label{sec:intro}
+\emph{Formal Argumentation} can be credited to the pioneering works in logics of Pollock~\cite{pollock92}, Vreeswijk~\cite{vreeswijk92}, and Simari and Loui~\cite{simari92}. The premise is that (non-monotonic) reasoning can be done by creating and assessing arguments, which are made up of several justifications for a claim's validity. Arguments differ from proofs in that they are defeasible, meaning that other arguments may challenge the validity of their conclusions. Therefore, whether a claim can be accepted depends not only on whether an argument supporting it exists, but also on whether potential opposing arguments exist, which can then be contested by attacking arguments, and so on.
+
+The \emph{Abstract Argumentation} theory of Dung~\cite{Dung:1995} provides the foundation for a lot of current argumentation research. An argumentation framework, which is essentially a directed graph with the arguments represented as nodes and the attack relation represented by arrows, is the key idea in this study. An analysis of the question of which set(s) of arguments can be accepted, given such a network, leads to the definition of an argumentation semantics. 
+
+In this regard, a number of proposals have been made in the literature; in Section~\ref{sect:bgarg} we summarise the background on  some NP-complete problems in Abstract Argumentation that are related to \emph{extensions}, which are sets of arguments that can survive the conflict together and thus represent collectively a reasonable position an autonomous reasoner might take. 
 
 
-\section{Background}\label{sec:background}
-An \emph{Abstract Argumentation Framework} (\af, for short) \cite{Dung:1995}
+\section{Background}\label{sect:background}
+
+
+\subsection{Argumentation.}\label{sect:bgarg} An \emph{Abstract Argumentation Framework} (\af, for short) \cite{Dung:1995}
 is a tuple $\F=(\args,\atts)$ where
 \args is a set of arguments and
 \atts is a relation $\atts\subseteq \args\times\args$.
@@ -124,7 +131,6 @@ $\sigma(\F) \not= \varnothing$?
 \emph{Existence of non-empty extension}
 $\nem\textit{-}\sigma$: given \AFC, does there exist $E
 \not= \varnothing$ such that $E \in \sigma(\F)$?
-\emph{Uniqueness of the solution} $\mathit{\textbf{UN}}\textit{-}\sigma$: given \AFC, is $\sigma(\F) = \{E\}$?
 
 
 
@@ -133,23 +139,26 @@ $\nem\textit{-}\sigma$: given \AFC, does there exist $E
 	\footnotesize
 	\begin{tabular}{ccccccc}
 		&  Ver-$\sigma$ &  DC-$\sigma$ & DS-$\sigma$ & Ex-$\sigma$ &
-		NE-$\sigma$ & UN-$\sigma$ \\
-		Conflict-free & in L & in L & triv.& triv. & in L & in L \\
-		Admissible & in L  & \bf{NP-c} & triv. & triv. &  \bf{NP-c} & coNP-c \\
-		Complete & in L &  \bf{NP-c} & P-c & triv. &  \bf{NP-c} & coNP-c \\
-		Preferred & coNP-c &  \bf{NP-c} & $\prod^{P}_{2}$-c& triv. &  \bf{NP-c} & coNP-c P\\
-		Semi-stable & coNP-c & $\sum^{P}_{2}$-c & $\prod^{P}_{2}$-c & triv. &  \bf{NP-c} & in $\Theta^{p}_{2}$  \\
-		Stable & in L &  \bf{NP-c} & coNP-c &  \bf{NP-c} &  \bf{NP-c} & DP-c\\
+		NE-$\sigma$  \\
+		Conflict-free & in L & in L & triv.& triv. & in L  \\
+		Admissible & in L  & \bf{NP-c} & triv. & triv. &  \bf{NP-c}  \\
+		Complete & in L &  \bf{NP-c} & P-c & triv. &  \bf{NP-c}  \\
+		Preferred & coNP-c &  \bf{NP-c} & $\prod^{P}_{2}$-c& triv. &  \bf{NP-c} \\
+		Semi-stable & coNP-c & $\sum^{P}_{2}$-c & $\prod^{P}_{2}$-c & triv. &  \bf{NP-c}  \\
+		Stable & in L &  \bf{NP-c} & coNP-c &  \bf{NP-c} &  \bf{NP-c} \\
 	\end{tabular}
 	\caption{The complexity of some  problems; NP-Complete problems are in bold.}
 	\label{sec:complexity}
 	\vspace{-0.5cm}
 \end{table}
 
+\iffalse
 The 2021 edition of the \emph{International Competition on Computational Models of Argumentation} (\emph{ICCMA})\footnote{ICCMA website: \url{https://argumentationcompetition.org/index.html}.} featured a track dedicated to approximate solvers for the first time: only  decision problems $\dc$-$\sigma$ and $\ds$-$\sigma$ we considered. Solvers were evaluated with respect to their accuracy, i.e. the ratio of instances that are correctly solved. The main motivation behind approximate algorithms over exact algorithms was their (potentially) lower execution: the timeout was reduced to 60 seconds, instead of 600.
 
 An approximate solver from ICCMA21 is HARPER++ by M. Thimm: such a solver can only  determine the grounded extension of an input framework and then uses that to approximate results for $\dc$ and $\ds$ tasks concerning $\sigma \in \{\co, \st, \pr, \sst, \stg, \id\}$. A positive answer to $\ds$-$\gr$ implies a positive answer to $\dc$ and $\ds$ for the other semantics. On the contrary, if an argument is attacked by an argument contained in the grounded extension, then the answer to $\dc$ and $\ds$ is negative. According to \cite{CeruttiTV20}, sceptical reasoning with any semantics generally overlaps with reasoning with the grounded semantics on many practical cases. AFGCN, by  Lars Malmqvist, competed in ICCMA21 as well. It uses a Graph Convolutional Network~\cite{WuPCLZY21}, to compute approximate solutions to  $\dc$ and $\ds$ tasks for $\sigma \in \{\co, \st, \pr, \sst, \stg, \id\}$ in a given AF. The model is trained by using a randomized training process using a dataset of AFs from previous ICCMA competitions in order to maximize generalization from the input frameworks. To speed up calculation and  improve accuracy, the solver uses the pre-computed grounded extension as an input feature to the neural network.
+\fi
 
+\subsection{QUBO}\label{sect:qubo}
 
 \section{Conclusion}\label{sec:conclusion}
 
