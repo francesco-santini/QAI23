@@ -78,7 +78,7 @@ francesco.santini@unipg.it}
 \maketitle
 
 \begin{abstract}
-????
+We want to encode some NP-complete problems in extension-based Abstract Argumentation into \emph{Quadratic Unconstrained Binary Optimization} problems.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -95,7 +95,9 @@ On the  other hand, in ``structured argumentation'',  the premises and claim of 
 In regard of Abstract Argumentation, a number of proposals have been made in the literature; in Section~\ref{sect:bgarg} we summarise the background on  some NP-complete problems  that are related to \emph{extensions}, which are sets of arguments that can survive the conflict together and thus represent collectively a reasonable position an autonomous reasoner might take. 
 
 
-A \emph{Quadratic Unconstrained Binary Optimization} problem (\emph{QUBO}),  is a mathematical formulation that  encompass a wide range of critical \emph{Combinatorial Optimization} problems: QUBO has been surveyed in \cite{survey2,survey1}, and the first work dates back to 1960~\cite{firstworkqubo}.  QUBO problems are  NP-Complete: therefore, a vast literature is dedicated to approximate solvers  based on heuristics or meta-heuristics, such as  \emph{simulated annealing} approaches (\emph{SA}), \emph{tabu-serch}, \emph{genetic algorithms} or \emph{evolutionary computing}~\cite{survey1}. \emph{Quantum} annealers  and Fujitsu's \emph{digital annealers}\footnote{Fujitsu's digital annealer: \url{https://bit.ly/3ySnkrq}.} can be used to find global minima by using quantum \emph{fluctuations}.  QUBO models are  at the heart of experimentation with quantum computers built by D-Wave Systems.\footnote{D-Wave webiste: \url{https://www.dwavesys.com}.}
+A \emph{Quadratic Unconstrained Binary Optimization} problem~\cite{firstworkqubo} (\emph{QUBO}),  is a mathematical formulation that  encompasses a wide range of critical \emph{Combinatorial Optimization} problems~\cite{survey2,survey1}.  QUBO problems are  NP-complete, and a vast literature is dedicated to approximate solvers  based on heuristics or meta-heuristics, such as  \emph{simulated annealing} approaches (\emph{SA}), \emph{tabu-serch}, \emph{genetic algorithms} or \emph{evolutionary computing}~\cite{survey1}. \emph{Quantum} annealers  and Fujitsu's \emph{digital annealers}\footnote{Fujitsu's digital annealer: \url{https://www.fujitsu.com/global/services/business-services/digital-annealer/}.} can be used to find global minima by using quantum \emph{fluctuations}.  QUBO models are  at the heart of experimentation with quantum computers built by D-Wave Systems.\footnote{D-Wave webiste: \url{https://www.dwavesys.com}.}
+
+In this paper we propose encodings of Abstract Argumentation problems that are NP-complete problems as well. The  results summarised here are new with respect to the pioneer  work in \cite{pricai22}. As a general result, our goal is to deepen  the research line opened there with the purpose to model  and solve this kind of problems with the help of quantum machines.
 
 \section{Background}\label{sect:background}
 
@@ -173,18 +175,31 @@ $\nem\textit{-}\sigma$: given \AFC, does there exist $E
 		Semi-stable & coNP-c & $\sum^{P}_{2}$-c & $\prod^{P}_{2}$-c & triv. &  \bf{NP-c}  \\
 		Stable & in L &  \bf{NP-c} & coNP-c &  \bf{NP-c} &  \bf{NP-c} \\
 	\end{tabular}
-	\caption{The complexity of some  problems; NP-Complete problems are in bold.}
+	\caption{The complexity of some  problems in Abstract Argumentation; NP-complete problems are highlighted in bold.}
 	\label{sec:complexity}
 	\vspace{-0.5cm}
 \end{table}
 
-\todo[inline]{BG problemi nuovi su cambiamento grafo}
+In addition, the work in \cite{extenf} presents the task of \emph{extension enforcement}: the goal is to change the attack relationship $\atts$ of a framework $\F=(\args,\atts)$ such that a given set $T \subseteq \args$ becomes (a subset of) an extension under a given semantics $\sigma$. \emph{Strict enforcement} is satisfied if $T$ is a $\sigma$-extension, while in \emph{non-strict enforcement} $T$ is only required to be a subset of a $\sigma$-extension. In this case, the complexity is reported in Tab.~\ref{sec:complexity2}.
 
-\iffalse
-The 2021 edition of the \emph{International Competition on Computational Models of Argumentation} (\emph{ICCMA})\footnote{ICCMA website: \url{https://argumentationcompetition.org/index.html}.} featured a track dedicated to approximate solvers for the first time: only  decision problems $\dc$-$\sigma$ and $\ds$-$\sigma$ we considered. Solvers were evaluated with respect to their accuracy, i.e. the ratio of instances that are correctly solved. The main motivation behind approximate algorithms over exact algorithms was their (potentially) lower execution: the timeout was reduced to 60 seconds, instead of 600.
 
-An approximate solver from ICCMA21 is HARPER++ by M. Thimm: such a solver can only  determine the grounded extension of an input framework and then uses that to approximate results for $\dc$ and $\ds$ tasks concerning $\sigma \in \{\co, \st, \pr, \sst, \stg, \id\}$. A positive answer to $\ds$-$\gr$ implies a positive answer to $\dc$ and $\ds$ for the other semantics. On the contrary, if an argument is attacked by an argument contained in the grounded extension, then the answer to $\dc$ and $\ds$ is negative. According to \cite{CeruttiTV20}, sceptical reasoning with any semantics generally overlaps with reasoning with the grounded semantics on many practical cases. AFGCN, by  Lars Malmqvist, competed in ICCMA21 as well. It uses a Graph Convolutional Network~\cite{WuPCLZY21}, to compute approximate solutions to  $\dc$ and $\ds$ tasks for $\sigma \in \{\co, \st, \pr, \sst, \stg, \id\}$ in a given AF. The model is trained by using a randomized training process using a dataset of AFs from previous ICCMA competitions in order to maximize generalization from the input frameworks. To speed up calculation and  improve accuracy, the solver uses the pre-computed grounded extension as an input feature to the neural network.
-\fi
+
+\begin{table}[t]
+	\centering
+	\footnotesize
+	\begin{tabular}{ccc}
+		$\sigma$ &  strict & non-strict  \\
+		Admissible & P  & \bf{NP-c}   \\
+		Complete & \bf{NP-c} &  \bf{NP-c}  \\
+		Preferred & $\sum^{P}_{2}$-c  &  \bf{NP-c}  \\
+		Stable &  P & \bf{NP-c}  \\
+		Grounded & \bf{NP-c} & \bf{NP-c}
+	\end{tabular}
+	\caption{The complexity of strict and non-strict extension enforcement.}
+	\label{sec:complexity2}
+	\vspace{-0.5cm}
+\end{table}
+
 
 \subsection{QUBO}\label{sect:qubo}
 \emph{Quadratic Unconstrained Binary Optimization} (\emph{QUBO})~\cite{glover,glover2} is a
@@ -198,16 +213,69 @@ are the quadratic coefficients. This can be expressed more concisely as $\min_{x
 the following steps {\bf i)}  find a binary representation for the solutions {\bf ii)}  define a penalization function, which penalizes unfeasible solutions (i.e., violating a constraint).
 
 \section{Encoding of problems}\label{sect:encoding}
-In \cite{pricai22} we proposed an encoding of two well-known NP-Complete problems in Abstract Argumentation (both considering the complete semantics) as Quadratic Unconstrained Binary Optimization (QUBO) problems, which share the same complexity.  We used Simulated Annealing  to solve QUBO. Moreover, preliminary tests were presented by also comparing the results with a different approximate solver, i.e., Harper++. 
+In \cite{pricai22} we proposed an encoding of two well-known NP-complete problems in Abstract Argumentation (both considering the complete semantics) as Quadratic Unconstrained Binary Optimization (QUBO) problems, which share the same complexity.  We used Simulated Annealing  to solve QUBO. Moreover, preliminary tests were presented by also comparing the results with a different approximate solver, i.e., Harper++. 
 
- Being this problem NP-Complete as well, there exist approximate solvers: from the D-Wave Ocean SDK we test a simulated annealing algorithm and a real quantum annelaer provided by the LeapTM Quantum Cloud Service.
+ Being this problem NP-complete as well, there exist approximate solvers: from the D-Wave Ocean SDK we test a simulated annealing algorithm and a real quantum annelaer provided by the LeapTM Quantum Cloud Service.
 
-Then, continuing on this research line, we have extended the encoding to all classical NP-Complete problems in Abstract Argumentation using five different semantics, and we have  compared the performance with Harper++ and AFGCN. 
+Then, continuing on this research line, we have extended the encoding to all classical NP-complete problems in Abstract Argumentation using five different semantics, and we have  compared the performance with Harper++ and AFGCN. 
 
-\todo[inline]{Fare rissunto di quello che abbiamo fatto ed  encoding nuovo}
+
+We first present a QUBO encoding of some of the Abstract Argumentation problems presented in Sect.~\ref{sect:background}. 
+
+We assign to each argument an index, hence $\args=\{a_1,\dots,$ $a_n\}$, where $n$ is the number of arguments. The encoding of problems in Abstract Argumentation uses
+a set of $n$ binary variables $x_1,\dots,x_n$ to represent a set $E$ of arguments.
+The meaning is that the argument
+$a_i\in E$ if and only if $x_i=1$. We denote by $\underbar{x}$ the tuple $(x_1,\dots,x_n)$
+and by $\mathbf{x}\in\{0,1\}^n$ a vector of possible values for $x_1,\dots,x_n$.
+Each semantics $\sigma$ will be associated with a quadratic penalty function $P_{\sigma}$ such that $P_{\sigma}$ assumes its minimum value at $\mathbf{x}$ if and only if the corresponding set $E=\{a_i\in \args \,:\, x_i=1\}$ is an extension valid for $\sigma$. 
+
+Most of the argumentation semantics require admissible sets. Hence, we define a penalty function $P_{adm}$ which enforces this property. $P_{adm}$ is the sum of 4 terms and contains new additional variables.
+The first term forces the set $E$ to be \textbf{conflict-free}:
+$ P_{cf}=\sum_{i \atts j \mbox{ or }\\
+	j \atts i} x_i x_j $. In fact, the value of $ P_{cf}$ corresponds to the number of self attacks in $E$
+and its value is $0$ if and only if $E$ is conflict-free. 
+
+The constraints to model the notion of \textbf{defense} are more complicated: we use a first set of additional variables $t_1,\dots,t_n$, denoting which arguments are attacked by $E$: $t_i=1$ if and only if $a_i$ is attacked by some argument of $E$. 
+The variables $d_1,\dots,d_n$ of the second set denote which arguments are defended by $E$: $d_i=1$ if and only if $a_i$ is defended (from all the possible attacks) by some arguments of $E$. For each argument $a_i$, the penalty function $P_{t}^i$ forces $t_i$ to be $1$ if and only if $a_i$ is attacked by $E$, i.e.,
+$t_i = \bigvee_{j \atts i} x_j$.
+
+Let $h_i$ be the number of attackers of $a_i$ and let $i_1,\dots,i_{h_i}$ be
+their indices. If $h_i=0$, then $t_i$ is simply $0$, while if $h_i=1$, then $t_i=x_{h_1}$:
+in these cases, we set $P_{t}^i=0$.
+If $h_i=2$, then $P_{t}^i=OR(t_i,x[i_1],x[i_2])$, where
+$ OR(Z,X,Y)=W+X+Y+XY-2Z(X+Y)$
+is the way of expressing as a quadratic function the constraint that the binary variable $Z$ is the disjunction of the binary variables $X$ and $Y$,
+as shown in \cite{rosenberg}. Finally, if $h_i>2$, then
+$ P_t^i=OR(t_i,x[i_1],\alpha_i^1)+OR(\alpha_i^1,x[i_2],\alpha_i^2)+\dots$
+$ +OR(\alpha_i^{h_i-3},x[i_{h_i-2}],\alpha_i^{h_i-2})+
+OR(\alpha_i^{h_i-2},x[i_{h_i-1}],x[i_{h_i}]), $, where $\alpha_i^1,\dots,\alpha_i^{h_i-2}$ are $h_i-2$ auxiliary binary variables.
+%Note that to avoid double or even triple subscripts, we use the notation $x[i_1]$ instead of $x_{i_1}$.
+
+The other penalty function $P_{d}^i$ forces $d_i$ to be $1$ if and only if $a_i$ is defended by $E$, i.e.,
+$ d_i = \bigwedge_{j \atts i} t_j $.
+If $h_i=0$, then $d_i$ is simply $1$, while if $h_i=1$, then $d_i=t_{h_1}$:
+in these cases, $P_{d}^i=0$.
+If $h_i=2$, then $P_{d}^i=AND(d_i,t[i_1],t[i_2])$, where
+$ AND(Z,X,Y)=3Z+XY-2Z(X+Y) $
+is the way of expressing the conjunction $Z=X\mbox{ and }Y$ as a quadratic function 
+\cite{rosenberg}. Otherwise, if $h_i>2$ then
+$ P_d^i=AND(d_i,t[i_1],\delta_i^1)+AND(\delta_i^1,t[i_2],\delta_i^2)+\dots$
++$ AND(\delta_i^{h_i-3},t[i_{h_i-2}],\delta_i^{h_i-2})+AND(\delta_i^{h_i-2},t[i_{h_i-1}], t[i_{h_i}])$, where $\delta_i^1,\dots,\delta_i^{h_i-2}$ are new $h_i-2$ auxiliary binary variables.
+
+The number of auxiliary variables needed for this encoding is hence $N=2n+2\sum_{i=1}^n \max(h_i-2,0)$, excluding the $n$ variables $x_1,\dots,x_n$. 
+%We denote by $\underbar{z}$ the tuple formed by all the auxiliary variables. 
+Note that, if $h=\max h_i$, then $N=O(nh)$.
+The final term $ P_{def}= \sum_{i=1}^n x_i(1-d_i) $
+forces each argument in $E$ to be defended by $E$.
+Summing up, the penalty function for \textbf{admissible} sets is
+$ P_{adm}=P_{cf}+ \sum_{i=1}^n P_t^i + \sum_{i=1}^n P_d^i 
++ P_{def}$.
+It is easy to prove that the minimum value of $P_{adm}$ is $0$ and the related values for $\underbar{x}$ correspond to admissible sets. For the \textbf{complete} semantics, we simply need to add an additional term to $P_{adm}$
+which forces all the arguments defended by $E$ to be elements of $E$:
+$ P_{co}=P_{adm} + \sum_{i=1}^n (1-x_i)d_i$.
 
 \section{Conclusion}\label{sec:conclusion}
-
+In \cite{pricai22} we have used the Ocean SDK\footnote{D-Wave Ocean SDK: \url{https://github.com/dwavesystems/dwave-ocean-sdk}.} to build the encoding in Python and then to solve it on a real D-Wave quantum machine; the logical graph representing the QUBO  model needs to be first embedded into the physical graph of D-Wave's hardware.
 
 \bibliographystyle{IEEEtran}
 \bibliography{main}
