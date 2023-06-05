@@ -85,15 +85,17 @@ francesco.santini@unipg.it}
 ?????
 \end{IEEEkeywords}
 
-\section{Introduction}\label{sec:intro}
+\section{Introduction}\label{sect:intro}
 \emph{Formal Argumentation} can be credited to the pioneering works in logics of Pollock~\cite{pollock92}, Vreeswijk~\cite{vreeswijk92}, and Simari and Loui~\cite{simari92}. The premise is that (non-monotonic) reasoning can be done by creating and assessing arguments, which are made up of several justifications for a claim's validity. Arguments differ from proofs in that they are defeasible, meaning that other arguments may challenge the validity of their conclusions. Therefore, whether a claim can be accepted depends not only on whether an argument supporting it exists, but also on whether potential opposing arguments exist, which can then be contested by attacking arguments, and so on.
 
 The \emph{Abstract Argumentation} theory of Dung~\cite{Dung:1995} provides the foundation for a lot of current argumentation research. An argumentation framework, which is essentially a directed graph with the arguments represented as nodes and the attack relation represented by arrows, is the key idea in this study. An analysis of the question of which set(s) of arguments can be accepted, given such a network, leads to the definition of an argumentation semantics. 
+The argumentation is said to be ``abstract'' because arguments have no internal structures and the there is no specification of what an argument or an attack is. Such a graph-language is however enough to represent conflict among information, and it has connections with well-founded semantics of logic programs~\cite{wellfounded}.
+On the  other hand, in ``structured argumentation'',  the premises and claim of an argument are made explicit, and the relationship between the premises and claim is formally defined by using logical entailment, for example (see an example in Sect.~\ref{sect:bgarg}).
 
-\todo[inline]{structured and non-structured}
+In regard of Abstract Argumentation, a number of proposals have been made in the literature; in Section~\ref{sect:bgarg} we summarise the background on  some NP-complete problems  that are related to \emph{extensions}, which are sets of arguments that can survive the conflict together and thus represent collectively a reasonable position an autonomous reasoner might take. 
 
-In this regard, a number of proposals have been made in the literature; in Section~\ref{sect:bgarg} we summarise the background on  some NP-complete problems in Abstract Argumentation that are related to \emph{extensions}, which are sets of arguments that can survive the conflict together and thus represent collectively a reasonable position an autonomous reasoner might take. 
 
+A \emph{Quadratic Unconstrained Binary Optimization} problem (\emph{QUBO}),  is a mathematical formulation that  encompass a wide range of critical \emph{Combinatorial Optimization} problems: QUBO has been surveyed in \cite{survey2,survey1}, and the first work dates back to 1960~\cite{firstworkqubo}.  QUBO problems are  NP-Complete: therefore, a vast literature is dedicated to approximate solvers  based on heuristics or meta-heuristics, such as  \emph{simulated annealing} approaches (\emph{SA}), \emph{tabu-serch}, \emph{genetic algorithms} or \emph{evolutionary computing}~\cite{survey1}. \emph{Quantum} annealers  and Fujitsu's \emph{digital annealers}\footnote{Fujitsu's digital annealer: \url{https://bit.ly/3ySnkrq}.} can be used to find global minima by using quantum \emph{fluctuations}.  QUBO models are  at the heart of experimentation with quantum computers built by D-Wave Systems.\footnote{D-Wave webiste: \url{https://www.dwavesys.com}.}
 
 \section{Background}\label{sect:background}
 
@@ -122,7 +124,28 @@ semantics are defined as follows.
 Given \AFC and a set $E \subseteq \args$, $E \in \co(\F)$ iff $E$ is admissible in $\F$ and if $a \in \args$ is defended by $E$ in $\F$ then $a\in E$;  $E \in \pr(\F)$ iff $E \in \co(\F)$ and there is no $E' \in \co(\F)$ s.t.\ $E' \supset E$; $E \in \sst(\F)$ iff $E \in \co(\F)$ and there is no $E' \in \co(\F)$ s.t.\ $E'^+_\F \supset E^+_\F$; $E \in \st(\F)$ iff $E \in \co(\F)$ and $E^+_\F = \args$,
 
 
-\todo[inline]{Esempio anche, con idea di cosa sia un argomento}
+\begin{figure}[t]
+	\centering
+	\begin{tikzpicture}[scale=1, transform shape]
+		\tikzstyle{every node} = [line width=1pt, shape=circle, fill=gray!15, minimum width=0.6cm]
+		\node (a) at (3, 0) {$a$};
+		\node (b) at +(0: 4.5) {$b$};
+		\node (c) at +(0: 6) {$c$};
+		\node (d) at +(0: 7.5) {$d$};
+		\node (e) at +(0: 9) {$e$};
+		\draw [line width = 1pt, ->] (a) -- (b) node[pos=.5, fill=white, above] {};
+		\draw [line width = 1pt, ->] (c) -- (b) node[pos=.5, fill=white, above] {};
+		\draw [line width = 1pt, ->] (d) -- (e) node[pos=.5, fill=white, above] {};
+		\draw [line width = 1pt, ->] (c)  edge[bend right=25]   node[fill=white, below] {} (d);
+		\draw [line width = 1pt, ->] (d) edge[bend right=25] node[fill=white, above] {} (c);
+	\end{tikzpicture}
+	\vspace{-0.3cm}
+	\caption{An example of  WAAF.}\label{fig:argnetex}
+\end{figure}
+
+
+Figure~\ref{fig:argnetex} shows an \af \, with five arguments and five attacks. Given $\F$, the set of complete extensions is $\co(\F) = \{\{a\}, \{a,d\}, \{a, c,e\}\}$, while $\st(\F) = \{\{a,d\}, \{a, c,e\}\}$ is the set of stable extensions, for example. As advanced in Sect.~\ref{sect:intro}, an \AF could represent an abstract view of a structured argumentation: for example, considering Fig.~\ref{fig:argnetex}, we might have that \emph{a:} ``Official reports from rating agencies say the financial crisis dramatically impacted on the overall government budget'' attacks \emph{b:} ``The budget allocated to healthcare for light drugs needs to be increased, because statistics say the number of light drugs users suffering from effects is increasing, and treatments are expensive''.
+
 
 
 We  now report  the definition of six well-known decision problems in Abstract Argumentation (yes/no answer).
@@ -176,6 +199,8 @@ the following steps {\bf i)}  find a binary representation for the solutions {\b
 
 \section{Encoding of problems}\label{sect:encoding}
 In \cite{pricai22} we proposed an encoding of two well-known NP-Complete problems in Abstract Argumentation (both considering the complete semantics) as Quadratic Unconstrained Binary Optimization (QUBO) problems, which share the same complexity.  We used Simulated Annealing  to solve QUBO. Moreover, preliminary tests were presented by also comparing the results with a different approximate solver, i.e., Harper++. 
+
+ Being this problem NP-Complete as well, there exist approximate solvers: from the D-Wave Ocean SDK we test a simulated annealing algorithm and a real quantum annelaer provided by the LeapTM Quantum Cloud Service.
 
 Then, continuing on this research line, we have extended the encoding to all classical NP-Complete problems in Abstract Argumentation using five different semantics, and we have  compared the performance with Harper++ and AFGCN. 
 
