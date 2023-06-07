@@ -78,11 +78,11 @@ francesco.santini@unipg.it}
 \maketitle
 
 \begin{abstract}
-We want to encode some NP-complete problems in extension-based Abstract Argumentation into \emph{Quadratic Unconstrained Binary Optimization} problems.
+We propose an encoding of several NP-complete problems in extension-based Abstract Argumentation into \emph{Quadratic Unconstrained Binary Optimization} problems. The obtained formulation can be then solved by using quantum annealers, as already accomplished in preliminary tests.
 \end{abstract}
 
 \begin{IEEEkeywords}
-?????
+Abstract Argumentation, Quadratic Unconstrained Binary Optimization.
 \end{IEEEkeywords}
 
 \section{Introduction}\label{sect:intro}
@@ -97,7 +97,7 @@ In regard of Abstract Argumentation, a number of proposals have been made in the
 
 A \emph{Quadratic Unconstrained Binary Optimization} problem~\cite{firstworkqubo} (\emph{QUBO}),  is a mathematical formulation that  encompasses a wide range of critical \emph{Combinatorial Optimization} problems~\cite{survey2,survey1}.  QUBO problems are  NP-complete, and a vast literature is dedicated to approximate solvers  based on heuristics or meta-heuristics, such as  \emph{simulated annealing} approaches (\emph{SA}), \emph{tabu-serch}, \emph{genetic algorithms} or \emph{evolutionary computing}~\cite{survey1}. \emph{Quantum} annealers  and Fujitsu's \emph{digital annealers}\footnote{Fujitsu's digital annealer: \url{https://www.fujitsu.com/global/services/business-services/digital-annealer/}.} can be used to find global minima by using quantum \emph{fluctuations}.  QUBO models are  at the heart of experimentation with quantum computers built by D-Wave Systems.\footnote{D-Wave webiste: \url{https://www.dwavesys.com}.}
 
-In this paper we propose encodings of Abstract Argumentation problems that are NP-complete problems as well. The  results summarised here are new with respect to the pioneer  work in \cite{pricai22}. As a general result, our goal is to deepen  the research line opened there with the purpose to model  and solve this kind of problems with the help of quantum machines.
+In this paper we propose encodings of different Abstract Argumentation problems that are NP-complete problems as well. The  results, here summarised, are new with respect to the pioneer  work in \cite{pricai22}. As a general result, our goal is to deepen  the research line opened there with the purpose to model  and solve a wide range of this kind of reasoning problems, with the help of quantum machines.
 
 \section{Background}\label{sect:background}
 
@@ -180,7 +180,7 @@ $\nem\textit{-}\sigma$: given \AFC, does there exist $E
 	\vspace{-0.5cm}
 \end{table}
 
-In addition, the work in \cite{extenf} presents the task of \emph{extension enforcement}: the goal is to change the attack relationship $\atts$ of a framework $\F=(\args,\atts)$ such that a given set $T \subseteq \args$ becomes (a subset of) an extension under a given semantics $\sigma$. \emph{Strict enforcement} is satisfied if $T$ is a $\sigma$-extension, while in \emph{non-strict enforcement} $T$ is only required to be a subset of a $\sigma$-extension. In this case, the complexity is reported in Tab.~\ref{sec:complexity2}.
+In addition, the work in \cite{extenf} presents the task of \emph{extension enforcement}: the goal is to change the attack relationship $\atts$ of a framework $\F=(\args,\atts)$ such that a given set $T \subseteq \args$ becomes (a subset of) an extension under a given semantics $\sigma$. \emph{Strict enforcement} is satisfied if $T$ is a $\sigma$-extension, while in \emph{non-strict enforcement} $T$ is only required to be a subset of a $\sigma$-extension. The complexity is reported in Tab.~\ref{sec:complexity2}.
 
 
 
