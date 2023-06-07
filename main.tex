@@ -213,66 +213,18 @@ are the quadratic coefficients. This can be expressed more concisely as $\min_{x
 the following steps {\bf i)}  find a binary representation for the solutions {\bf ii)}  define a penalization function, which penalizes unfeasible solutions (i.e., violating a constraint).
 
 \section{Encoding of problems}\label{sect:encoding}
-In \cite{pricai22} we proposed an encoding of two well-known NP-complete problems in Abstract Argumentation (both considering the complete semantics) as Quadratic Unconstrained Binary Optimization (QUBO) problems, which share the same complexity.  We used Simulated Annealing  to solve QUBO. Moreover, preliminary tests were presented by also comparing the results with a different approximate solver, i.e., Harper++. 
+In \cite{pricai22} we proposed an encoding of two well-known NP-complete problems in Abstract Argumentation (both considering the complete semantics, see Sect.~\ref{sect:bgarg}) as QUBO problems, which share the same complexity: the encoded problems are  
+$\dc\textit{-}\sigma$ and
+%$\mathit{\textbf{Exists}}\textit{-}\sigma$, and 
+$\mathit{\textbf{Exists}}\textit{-}\sigma^{\neg\varnothing}$, 
+while the considered semantics was only $\co$.  
+Moreover, in \cite{pricai22} we solved this problem on some frameworks directly  implementing them by using the D-Wave Ocean SDK. We both used a simulated annealing algorithm and a real quantum annelaer provided by the \emph{LeapTM Quantum Cloud Service}.\footnote{D-Wave Ocean SDK: \url{https://github.com/dwavesystems/dwave-ocean-sdk}.}
 
- Being this problem NP-complete as well, there exist approximate solvers: from the D-Wave Ocean SDK we test a simulated annealing algorithm and a real quantum annelaer provided by the LeapTM Quantum Cloud Service.
+With respect to \cite{pricai22}, by continuing on this research line, we have extended the encoding to all classical NP-complete problems in Tab.~\ref{sec:complexity}.
+%with Harper++ and AFGCN. 
 
-Then, continuing on this research line, we have extended the encoding to all classical NP-complete problems in Abstract Argumentation using five different semantics, and we have  compared the performance with Harper++ and AFGCN. 
 
 
-We first present a QUBO encoding of some of the Abstract Argumentation problems presented in Sect.~\ref{sect:background}. 
-
-We assign to each argument an index, hence $\args=\{a_1,\dots,$ $a_n\}$, where $n$ is the number of arguments. The encoding of problems in Abstract Argumentation uses
-a set of $n$ binary variables $x_1,\dots,x_n$ to represent a set $E$ of arguments.
-The meaning is that the argument
-$a_i\in E$ if and only if $x_i=1$. We denote by $\underbar{x}$ the tuple $(x_1,\dots,x_n)$
-and by $\mathbf{x}\in\{0,1\}^n$ a vector of possible values for $x_1,\dots,x_n$.
-Each semantics $\sigma$ will be associated with a quadratic penalty function $P_{\sigma}$ such that $P_{\sigma}$ assumes its minimum value at $\mathbf{x}$ if and only if the corresponding set $E=\{a_i\in \args \,:\, x_i=1\}$ is an extension valid for $\sigma$. 
-
-Most of the argumentation semantics require admissible sets. Hence, we define a penalty function $P_{adm}$ which enforces this property. $P_{adm}$ is the sum of 4 terms and contains new additional variables.
-The first term forces the set $E$ to be \textbf{conflict-free}:
-$ P_{cf}=\sum_{i \atts j \mbox{ or }\\
-	j \atts i} x_i x_j $. In fact, the value of $ P_{cf}$ corresponds to the number of self attacks in $E$
-and its value is $0$ if and only if $E$ is conflict-free. 
-
-The constraints to model the notion of \textbf{defense} are more complicated: we use a first set of additional variables $t_1,\dots,t_n$, denoting which arguments are attacked by $E$: $t_i=1$ if and only if $a_i$ is attacked by some argument of $E$. 
-The variables $d_1,\dots,d_n$ of the second set denote which arguments are defended by $E$: $d_i=1$ if and only if $a_i$ is defended (from all the possible attacks) by some arguments of $E$. For each argument $a_i$, the penalty function $P_{t}^i$ forces $t_i$ to be $1$ if and only if $a_i$ is attacked by $E$, i.e.,
-$t_i = \bigvee_{j \atts i} x_j$.
-
-Let $h_i$ be the number of attackers of $a_i$ and let $i_1,\dots,i_{h_i}$ be
-their indices. If $h_i=0$, then $t_i$ is simply $0$, while if $h_i=1$, then $t_i=x_{h_1}$:
-in these cases, we set $P_{t}^i=0$.
-If $h_i=2$, then $P_{t}^i=OR(t_i,x[i_1],x[i_2])$, where
-$ OR(Z,X,Y)=W+X+Y+XY-2Z(X+Y)$
-is the way of expressing as a quadratic function the constraint that the binary variable $Z$ is the disjunction of the binary variables $X$ and $Y$,
-as shown in \cite{rosenberg}. Finally, if $h_i>2$, then
-$ P_t^i=OR(t_i,x[i_1],\alpha_i^1)+OR(\alpha_i^1,x[i_2],\alpha_i^2)+\dots$
-$ +OR(\alpha_i^{h_i-3},x[i_{h_i-2}],\alpha_i^{h_i-2})+
-OR(\alpha_i^{h_i-2},x[i_{h_i-1}],x[i_{h_i}]), $, where $\alpha_i^1,\dots,\alpha_i^{h_i-2}$ are $h_i-2$ auxiliary binary variables.
-%Note that to avoid double or even triple subscripts, we use the notation $x[i_1]$ instead of $x_{i_1}$.
-
-The other penalty function $P_{d}^i$ forces $d_i$ to be $1$ if and only if $a_i$ is defended by $E$, i.e.,
-$ d_i = \bigwedge_{j \atts i} t_j $.
-If $h_i=0$, then $d_i$ is simply $1$, while if $h_i=1$, then $d_i=t_{h_1}$:
-in these cases, $P_{d}^i=0$.
-If $h_i=2$, then $P_{d}^i=AND(d_i,t[i_1],t[i_2])$, where
-$ AND(Z,X,Y)=3Z+XY-2Z(X+Y) $
-is the way of expressing the conjunction $Z=X\mbox{ and }Y$ as a quadratic function 
-\cite{rosenberg}. Otherwise, if $h_i>2$ then
-$ P_d^i=AND(d_i,t[i_1],\delta_i^1)+AND(\delta_i^1,t[i_2],\delta_i^2)+\dots$
-+$ AND(\delta_i^{h_i-3},t[i_{h_i-2}],\delta_i^{h_i-2})+AND(\delta_i^{h_i-2},t[i_{h_i-1}], t[i_{h_i}])$, where $\delta_i^1,\dots,\delta_i^{h_i-2}$ are new $h_i-2$ auxiliary binary variables.
-
-The number of auxiliary variables needed for this encoding is hence $N=2n+2\sum_{i=1}^n \max(h_i-2,0)$, excluding the $n$ variables $x_1,\dots,x_n$. 
-%We denote by $\underbar{z}$ the tuple formed by all the auxiliary variables. 
-Note that, if $h=\max h_i$, then $N=O(nh)$.
-The final term $ P_{def}= \sum_{i=1}^n x_i(1-d_i) $
-forces each argument in $E$ to be defended by $E$.
-Summing up, the penalty function for \textbf{admissible} sets is
-$ P_{adm}=P_{cf}+ \sum_{i=1}^n P_t^i + \sum_{i=1}^n P_d^i 
-+ P_{def}$.
-It is easy to prove that the minimum value of $P_{adm}$ is $0$ and the related values for $\underbar{x}$ correspond to admissible sets. For the \textbf{complete} semantics, we simply need to add an additional term to $P_{adm}$
-which forces all the arguments defended by $E$ to be elements of $E$:
-$ P_{co}=P_{adm} + \sum_{i=1}^n (1-x_i)d_i$.
 
 \section{Conclusion}\label{sec:conclusion}
 In \cite{pricai22} we have used the Ocean SDK\footnote{D-Wave Ocean SDK: \url{https://github.com/dwavesystems/dwave-ocean-sdk}.} to build the encoding in Python and then to solve it on a real D-Wave quantum machine; the logical graph representing the QUBO  model needs to be first embedded into the physical graph of D-Wave's hardware.
