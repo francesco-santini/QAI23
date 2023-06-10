@@ -92,17 +92,17 @@ Abstract Argumentation, Quadratic Unconstrained Binary Optimisation.
 \section{Introduction}\label{sect:intro}
 \emph{Formal Argumentation} can be credited to the pioneering works in logics of Pollock~\cite{pollock92} and other authors. The premise is that (non-monotonic) reasoning can be done by creating and assessing arguments, which are made up of several justifications for a claim's validity. Arguments differ from proofs in that they are defeasible: whether a claim can be accepted depends not only on whether an argument supporting it exists, but also on whether potential opposing arguments exist, which can then be contested by attacking arguments, and so on.
 
-The \emph{Abstract Argumentation} theory of Dung~\cite{Dung:1995} provides the foundation for a lot of current argumentation research. An argumentation framework, which is essentially a directed graph with the arguments represented as nodes and the attack relation represented by arrows, is the key idea in this study. An analysis of the question of which set(s) of arguments can be accepted, given such a network, leads to the definition of an argumentation semantics. 
+The \emph{Abstract Argumentation} theory of Dung~\cite{Dung:1995} provides the foundation for a lot of current argumentation research. An argumentation framework, which is essentially a directed graph with the arguments represented as nodes and the attack relation represented by arrows, is the key idea in this study. An analysis of the question of which set(s) of arguments can be accepted, given such a network, leads to the definition of  argumentation semantics. 
 
-The argumentation is said to be ``abstract'' because arguments have no internal structures and the there is no specification of what an argument or an attack is. It is however enough to represent conflict among information, and it has connections with well-founded semantics of logic programs~\cite{Dung:1995}.
+The argumentation is said to be ``abstract'' because arguments have no internal structures and there is no specification of what an argument or an attack is. It is however enough to represent conflict among information, and it has connections with well-founded semantics of logic programs~\cite{Dung:1995}.
 %On the  other hand, in ``structured argumentation'',  the premises and claim of an argument are made explicit, and the relationship between the premises and claim is formally defined by using logical entailment, for example (see an example in Sect.~\ref{sect:bgarg}).
 
-In regard of Abstract Argumentation, a number of proposals have been made in the literature; in Section~\ref{sect:bgarg} we summarise the background on  some NP-complete problems  that are related to \emph{extensions}, which are sets of arguments that can survive the conflict together and thus represent collectively a reasonable position an autonomous reasoner might take. 
+In regard to Abstract Argumentation, a number of proposals have been made in the literature; in Section~\ref{sect:bgarg} we summarise the background on  some NP-complete problems  that are related to \emph{extensions}, which are sets of arguments that can survive the conflict together and thus represent collectively a reasonable position an autonomous reasoner might take. 
 
 
 A \emph{Quadratic Unconstrained Binary Optimisation} problem~\cite{firstworkqubo} (\emph{QUBO}),  is a mathematical formulation that  encompasses a wide range of critical \emph{Combinatorial Optimisation} problems.  QUBO problems are  NP-complete, and a vast literature is dedicated to approximate solvers  based on heuristics or meta-heuristics, such as  \emph{simulated annealing} approaches (\emph{SA}), \emph{tabu-serch}, \emph{genetic algorithms} or \emph{evolutionary computing}~\cite{survey1}. \emph{Quantum} annealers  and Fujitsu's \emph{digital annealers}\footnote{Fujitsu's digital annealer: \url{https://www.fujitsu.com/global/services/business-services/digital-annealer/}.} can be used to find global minima by using quantum \emph{fluctuations}.  QUBO models are  at the heart of experimentation with quantum computers built by D-Wave Systems.\footnote{D-Wave webiste: \url{https://www.dwavesys.com}.}
 
-In this paper we propose encodings of different Abstract Argumentation problems that are NP-complete problems as well. The  results, here summarised, are new with respect to the pioneer  work in \cite{pricai22}. As a general result, our goal is to deepen  the research line opened there with the purpose to model  and solve a wide range of this kind of reasoning problems, with the help of quantum machines.
+In this paper, we propose encodings of different Abstract Argumentation problems that are NP-complete problems as well. The  results, here summarised, are new with respect to the pioneering  work in \cite{pricai22}. As a general result, our goal is to deepen  the research line opened there with the purpose of modelling  and solving a wide range of these kinds of reasoning problems, with the help of quantum machines.
 
 \section{Background}\label{sect:background}
 
@@ -233,7 +233,7 @@ $\dc\textit{-}\sigma$ and
 %$\mathit{\textbf{Exists}}\textit{-}\sigma$, and 
 $\mathit{\textbf{Exists}}\textit{-}\sigma^{\neg\varnothing}$, 
 while the considered semantics was only $\co$.  
-Moreover, in \cite{pricai22} we solved this problem on some frameworks directly  implementing them by using the D-Wave Ocean SDK. We both used a simulated annealing algorithm and a real quantum annelaer provided by the \emph{LeapTM Quantum Cloud Service}.\footnote{D-Wave Ocean SDK: \url{https://github.com/dwavesystems/dwave-ocean-sdk}.}
+Moreover, in \cite{pricai22} we solved this problem on some frameworks by directly  implementing them by using the D-Wave Ocean SDK. We both used a simulated annealing algorithm and a real quantum annealer provided by the \emph{LeapTM Quantum Cloud Service}.\footnote{D-Wave Ocean SDK: \url{https://github.com/dwavesystems/dwave-ocean-sdk}.}
 
 With respect to \cite{pricai22}, by continuing on this research line, we have extended the encoding to all classical NP-complete problems highlighted in bold in Tab.~\ref{sec:complexity}.
 Moreover, we have empirically validated all the encodings by comparing the obtained results with the simulated annealing algorithm against \emph{ConArg}~\cite{conarg}, an exact solver using \emph{Constraint Programming}.
@@ -326,8 +326,7 @@ $d_i=\bigwedge_{j=1}^n (r_{ji} \implies t_j)$,  which
 means that $d_i=1$ if and only if the argument $a_i\in T$
 is defended against all its attacker by some elements of $T$.
 This term is encoded in QUBO using a new set of auxiliary variables 
-to represent the implication $(r_{ji} \implies t_j)$, other
-than the same auxiliary variables used for $P^i_d$.
+to represent the implication $(r_{ji} \implies t_j)$, other than the same auxiliary variables used for $P^i_d$.
 
 The fourth term is simply $\sum_{i=1}^k (1-d_i)$, which requires
 that all arguments in $T$ are defended, while the last term
@@ -341,7 +340,7 @@ obtained for $P^r_{co}=0$.
 
 
 \section{Conclusion}\label{sec:conclusion}
-We introduced NP-complete problems in Abstract Argumentation that may benefit from QUBO encodings and their solution on quantum annealers. We summarised only some of them, since others exist  that consider, for example, weighted arguments and/or attacks. Moreover, further investigation is needed to better exploit the hardware and the connections among qubits, which are limited on D-Wave’s architectures.
+We introduced NP-complete problems in Abstract Argumentation that may benefit from QUBO encodings and their solution on quantum annealers. We summarised only some of them since others exist  that consider, for example, weighted arguments and/or attacks. Moreover, further investigation is needed to better exploit the hardware and the connections among qubits, which are limited on D-Wave’s architectures.
 
 \bibliographystyle{IEEEtran}
 \bibliography{main}
