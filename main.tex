@@ -1,5 +1,6 @@
 \documentclass[conference]{IEEEtran}
 \IEEEoverridecommandlockouts
+\def\arraystretch{0.97}
 % The preceding line is only needed to identify funding in the first footnote. If that is unneeded, please comment it out.
 \usepackage{cite}
 \usepackage{amsmath,amssymb,amsxtra,amsfonts,cancel,amsthm}
@@ -13,12 +14,14 @@
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
+\newtheorem{definition}{Definition}
+\DeclareMathOperator*{\argmin}{argmin}
 
 \newcommand{\powerset}[1]{\ensuremath{2^{#1}}} % power set
 \newcommand{\AF}{\ensuremath{\mathcal{F}}\xspace} % Abstract argumentation framework
 \newcommand{\F}{\ensuremath{\mathcal{F}}\xspace} % Abstract argumentation framework
 \newcommand{\args}{\ensuremath{\mathsf{A}}\xspace} % Set of arguments
-\newcommand{\atts}{\ensuremath{\rightarrow}\xspace}
+\newcommand{\atts}{\ensuremath{R}\xspace}
 \newcommand{\attackers}[2]{\ensuremath{\mathcal{F}_{#1}(#2)\xspace}} % Attacker set
 \newcommand{\AFC}{\ensuremath{\AF=(\args,\atts)}\xspace} % Definition of an abstract argumentation framework
 \newcommand{\cA}{\ensuremath{\mathcal{A}}} % some argument
@@ -64,13 +67,13 @@
 
 \author{\IEEEauthorblockN{1\textsuperscript{st} Marco Baioletti}
 \IEEEauthorblockA{\textit{Dipartimento di Matematica e Informatica} \\
-\textit{University of Perugia}\\
+\textit{Universit{\`a} degli Studi di Perugia}\\
 Perugia, Italy \\
 marco.baioletti@unipg.it}
 \and
 \IEEEauthorblockN{2\textsuperscript{nd} Francesco Santini}
 \IEEEauthorblockA{\textit{Dipartimento di Matematica e Informatica} \\
-\textit{University of Perugia}\\
+\textit{Universit{\`a} degli Studi di Perugia}\\
 Perugia, Italy \\
 francesco.santini@unipg.it}
 }
@@ -78,24 +81,25 @@ francesco.santini@unipg.it}
 \maketitle
 
 \begin{abstract}
-We propose an encoding of several NP-complete problems in extension-based Abstract Argumentation into \emph{Quadratic Unconstrained Binary Optimization} problems. The obtained formulation can be then solved by using quantum annealers, as already accomplished in preliminary tests.
+We propose an encoding of different NP-complete problems in extension-based Abstract Argumentation into \emph{Quadratic Unconstrained Binary Optimisation} problems. The obtained formulation can be then solved by using quantum annealers, as already accomplished in preliminary tests.
 \end{abstract}
 
 \begin{IEEEkeywords}
-Abstract Argumentation, Quadratic Unconstrained Binary Optimization.
+Abstract Argumentation, Quadratic Unconstrained Binary Optimisation.
 \end{IEEEkeywords}
 
 \section{Introduction}\label{sect:intro}
-\emph{Formal Argumentation} can be credited to the pioneering works in logics of Pollock~\cite{pollock92}, Vreeswijk~\cite{vreeswijk92}, and Simari and Loui~\cite{simari92}. The premise is that (non-monotonic) reasoning can be done by creating and assessing arguments, which are made up of several justifications for a claim's validity. Arguments differ from proofs in that they are defeasible, meaning that other arguments may challenge the validity of their conclusions. Therefore, whether a claim can be accepted depends not only on whether an argument supporting it exists, but also on whether potential opposing arguments exist, which can then be contested by attacking arguments, and so on.
+\emph{Formal Argumentation} can be credited to the pioneering works in logics of Pollock~\cite{pollock92} and other authors. The premise is that (non-monotonic) reasoning can be done by creating and assessing arguments, which are made up of several justifications for a claim's validity. Arguments differ from proofs in that they are defeasible: whether a claim can be accepted depends not only on whether an argument supporting it exists, but also on whether potential opposing arguments exist, which can then be contested by attacking arguments, and so on.
 
 The \emph{Abstract Argumentation} theory of Dung~\cite{Dung:1995} provides the foundation for a lot of current argumentation research. An argumentation framework, which is essentially a directed graph with the arguments represented as nodes and the attack relation represented by arrows, is the key idea in this study. An analysis of the question of which set(s) of arguments can be accepted, given such a network, leads to the definition of an argumentation semantics. 
-The argumentation is said to be ``abstract'' because arguments have no internal structures and the there is no specification of what an argument or an attack is. Such a graph-language is however enough to represent conflict among information, and it has connections with well-founded semantics of logic programs~\cite{wellfounded}.
-On the  other hand, in ``structured argumentation'',  the premises and claim of an argument are made explicit, and the relationship between the premises and claim is formally defined by using logical entailment, for example (see an example in Sect.~\ref{sect:bgarg}).
+
+The argumentation is said to be ``abstract'' because arguments have no internal structures and the there is no specification of what an argument or an attack is. It is however enough to represent conflict among information, and it has connections with well-founded semantics of logic programs~\cite{Dung:1995}.
+%On the  other hand, in ``structured argumentation'',  the premises and claim of an argument are made explicit, and the relationship between the premises and claim is formally defined by using logical entailment, for example (see an example in Sect.~\ref{sect:bgarg}).
 
 In regard of Abstract Argumentation, a number of proposals have been made in the literature; in Section~\ref{sect:bgarg} we summarise the background on  some NP-complete problems  that are related to \emph{extensions}, which are sets of arguments that can survive the conflict together and thus represent collectively a reasonable position an autonomous reasoner might take. 
 
 
-A \emph{Quadratic Unconstrained Binary Optimization} problem~\cite{firstworkqubo} (\emph{QUBO}),  is a mathematical formulation that  encompasses a wide range of critical \emph{Combinatorial Optimization} problems~\cite{survey2,survey1}.  QUBO problems are  NP-complete, and a vast literature is dedicated to approximate solvers  based on heuristics or meta-heuristics, such as  \emph{simulated annealing} approaches (\emph{SA}), \emph{tabu-serch}, \emph{genetic algorithms} or \emph{evolutionary computing}~\cite{survey1}. \emph{Quantum} annealers  and Fujitsu's \emph{digital annealers}\footnote{Fujitsu's digital annealer: \url{https://www.fujitsu.com/global/services/business-services/digital-annealer/}.} can be used to find global minima by using quantum \emph{fluctuations}.  QUBO models are  at the heart of experimentation with quantum computers built by D-Wave Systems.\footnote{D-Wave webiste: \url{https://www.dwavesys.com}.}
+A \emph{Quadratic Unconstrained Binary Optimisation} problem~\cite{firstworkqubo} (\emph{QUBO}),  is a mathematical formulation that  encompasses a wide range of critical \emph{Combinatorial Optimisation} problems.  QUBO problems are  NP-complete, and a vast literature is dedicated to approximate solvers  based on heuristics or meta-heuristics, such as  \emph{simulated annealing} approaches (\emph{SA}), \emph{tabu-serch}, \emph{genetic algorithms} or \emph{evolutionary computing}~\cite{survey1}. \emph{Quantum} annealers  and Fujitsu's \emph{digital annealers}\footnote{Fujitsu's digital annealer: \url{https://www.fujitsu.com/global/services/business-services/digital-annealer/}.} can be used to find global minima by using quantum \emph{fluctuations}.  QUBO models are  at the heart of experimentation with quantum computers built by D-Wave Systems.\footnote{D-Wave webiste: \url{https://www.dwavesys.com}.}
 
 In this paper we propose encodings of different Abstract Argumentation problems that are NP-complete problems as well. The  results, here summarised, are new with respect to the pioneer  work in \cite{pricai22}. As a general result, our goal is to deepen  the research line opened there with the purpose to model  and solve a wide range of this kind of reasoning problems, with the help of quantum machines.
 
@@ -128,6 +132,7 @@ Given \AFC and a set $E \subseteq \args$, $E \in \co(\F)$ iff $E$ is admissible 
 
 \begin{figure}[t]
 	\centering
+ \scalebox{0.8}{
 	\begin{tikzpicture}[scale=1, transform shape]
 		\tikzstyle{every node} = [line width=1pt, shape=circle, fill=gray!15, minimum width=0.6cm]
 		\node (a) at (3, 0) {$a$};
@@ -140,17 +145,17 @@ Given \AFC and a set $E \subseteq \args$, $E \in \co(\F)$ iff $E$ is admissible 
 		\draw [line width = 1pt, ->] (d) -- (e) node[pos=.5, fill=white, above] {};
 		\draw [line width = 1pt, ->] (c)  edge[bend right=25]   node[fill=white, below] {} (d);
 		\draw [line width = 1pt, ->] (d) edge[bend right=25] node[fill=white, above] {} (c);
-	\end{tikzpicture}
+	\end{tikzpicture}}
 	\vspace{-0.3cm}
 	\caption{An example of  WAAF.}\label{fig:argnetex}
 \end{figure}
 
 
-Figure~\ref{fig:argnetex} shows an \af \, with five arguments and five attacks. Given $\F$, the set of complete extensions is $\co(\F) = \{\{a\}, \{a,d\}, \{a, c,e\}\}$, while $\st(\F) = \{\{a,d\}, \{a, c,e\}\}$ is the set of stable extensions, for example. As advanced in Sect.~\ref{sect:intro}, an \AF could represent an abstract view of a structured argumentation: for example, considering Fig.~\ref{fig:argnetex}, we might have that \emph{a:} ``Official reports from rating agencies say the financial crisis dramatically impacted on the overall government budget'' attacks \emph{b:} ``The budget allocated to healthcare for light drugs needs to be increased, because statistics say the number of light drugs users suffering from effects is increasing, and treatments are expensive''.
+Figure~\ref{fig:argnetex} shows an \af \, with five arguments and five attacks. Given $\F$, the set of complete extensions is $\co(\F) = \{\{a\}, \{a,d\}, \{a, c,e\}\}$, while $\st(\F) = \{\{a,d\}, \{a, c,e\}\}$ is the set of stable extensions, for example. %As advanced in Sect.~\ref{sect:intro}, an \AF could represent an abstract view of a structured argumentation: for example, considering Fig.~\ref{fig:argnetex}, we might have that \emph{a:} ``Official reports from rating agencies say the financial crisis dramatically impacted on the overall government budget'' attacks \emph{b:} ``The budget allocated to healthcare for light drugs needs to be increased, because statistics say the number of light drugs users suffering from effects is increasing, and treatments are expensive''.
 
 
 
-We  now report  the definition of six well-known decision problems in Abstract Argumentation (yes/no answer).
+We  now report  the definition of six well-known decision problems in Abstract Argumentation.
 \emph{Credulous acceptance} $\dc\textit{-}\sigma$: given \AFC and an argument $a \in \args$, is $a$ contained in some $E \in \sigma(\F)$?
 Sceptical acceptance $\ds\textit{-}\sigma$: given \AFC and an argument $a \in \args$, is $a$ contained in all $E \in \sigma(\F)$?
 \emph{Verification of an extension} $\mathit{\textbf{VER}}\textit{-}\sigma$: given \AFC and a set of arguments $E \subseteq \args$, is $E \in \sigma(\F)$?
@@ -175,15 +180,19 @@ $\nem\textit{-}\sigma$: given \AFC, does there exist $E
 		Semi-stable & coNP-c & $\sum^{P}_{2}$-c & $\prod^{P}_{2}$-c & triv. &  \bf{NP-c}  \\
 		Stable & in L &  \bf{NP-c} & coNP-c &  \bf{NP-c} &  \bf{NP-c} \\
 	\end{tabular}
-	\caption{The complexity of some  problems in Abstract Argumentation; NP-complete problems are highlighted in bold.}
+	\caption{The complexity of some  problems in Abstract Argumentation.}
 	\label{sec:complexity}
 	\vspace{-0.5cm}
 \end{table}
 
-In addition, the work in \cite{extenf} presents the task of \emph{extension enforcement}: the goal is to change the attack relationship $\atts$ of a framework $\F=(\args,\atts)$ such that a given set $T \subseteq \args$ becomes (a subset of) an extension under a given semantics $\sigma$. \emph{Strict enforcement} is satisfied if $T$ is a $\sigma$-extension, while in \emph{non-strict enforcement} $T$ is only required to be a subset of a $\sigma$-extension. The complexity is reported in Tab.~\ref{sec:complexity2}.
+In addition, the work in \cite{extenf1} presents the task of \emph{extension enforcement}: we consider the objective to change the attack relationship $\atts$ of a framework $\F=(\args,\atts)$ such that a given set $T \subseteq \args$ becomes (a subset of) an extension under a given semantics $\sigma$. In this case, we say that the enforcement is \emph{argument-fixed}, since only the attack relationship can be modified. \emph{Strict enforcement} is satisfied if $T$ is a $\sigma$-extension, while in \emph{non-strict enforcement} $T$ is only required to be a subset of a $\sigma$-extension. If we consider the Hamming distance of the changes, i.e., $|R \Delta R'| = |R\setminus R'|+|R'\setminus R|$, in \cite{extenf1} the authors impose a threshold $|R \Delta R'| \leq k$ as a further parameter of these problems. The complexity of some of these problems is reported in Tab.~\ref{sec:complexity2}.
+
+In this paper, as proposed in \cite{extenf}, we look at the problem from an optimisation point of view:
 
 \begin{definition}[\cite{extenf}]
-Extension enforcement is an optimization problem, where the number of changes is minimized
+Given $\F=(\args,\atts)$, $T \subseteq \args$, and semantics $\sigma$, strict extension enforcement is an optimisation problem where to goal is to find $\F^\ast=(\args,\atts^\ast)$ s.t.:
+$$\atts^\ast \in \argmin_{R' \in \mathit{enfst}(\F, T, \sigma)} \; |R \Delta R'|$$
+\noindent where $\mathit{enfst}(\F, T, \sigma)= \{\atts' | \F' =(\args,\atts'), T \in \sigma(\F')\}$. Similarly, we can define the same problem by considering non-strict enforcement (by defining $\mathit{enfnst}$).
 \end{definition}
 
 \begin{table}[t]
@@ -197,25 +206,28 @@ Extension enforcement is an optimization problem, where the number of changes is
 		Stable &  P & \bf{NP-c}  \\
 		Grounded & \bf{NP-c} & \bf{NP-c}
 	\end{tabular}
-	\caption{The complexity of strict and non-strict extension enforcement.}
+	\caption{The complexity of extension enforcement~\cite{extenf}.}
 	\label{sec:complexity2}
 	\vspace{-0.5cm}
 \end{table}
 
 
 \subsection{QUBO}\label{sect:qubo}
-\emph{Quadratic Unconstrained Binary Optimization} (\emph{QUBO})~\cite{glover,glover2} is a
-form of optimization problems encompassing e.g. SAT/Constraint/(0,1)-ILP, which  recently gained a great popularity because of fast solvers and dedicated computing devices, such as
+\emph{Quadratic Unconstrained Binary Optimisation} (\emph{QUBO})~\cite{glover} is a
+form of optimisation problems encompassing e.g. SAT/Constraint/(0,1)-ILP, which  recently gained great popularity because of fast solvers and dedicated computing devices, such as
 quantum and digital annealers. 
 A QUBO problem is defined in terms of $n$ binary variables $x_1,\dots,x_n$
 and a $n\times n$ upper-diagonal matrix $\mathcal{Q}$ and consists in 
-minimizing the function $f(x) = \sum_{i=1}^n Q_{i,i} x_i + \sum_{i < j}^n Q_{i,j} x_i x_j$.
+minimising the function $f(x) = \sum_{i=1}^n Q_{i,i} x_i + \sum_{i < j}^n Q_{i,j} x_i x_j$.
 The diagonal terms $Q_{i,i}$ are the linear coefficients and the non-zero off-diagonal terms $Q_{i,j}$
-are the quadratic coefficients. This can be expressed more concisely as $\min_{x \in \{0,1\}^n} x^T Q x$, where $x^T$ denotes the transpose of the vector $x$. The formulation of a discrete constrained optimization problem as QUBO requires
-the following steps {\bf i)}  find a binary representation for the solutions {\bf ii)}  define a penalization function, which penalizes unfeasible solutions (i.e., violating a constraint).
+are the quadratic coefficients. This can be expressed more concisely as $\min_{x \in \{0,1\}^n} x^T Q x$, where $x^T$ denotes the transpose of the vector $x$. The formulation of problem in QUBO
+consists in  \emph{i)}  find a binary representation for the solutions, \emph{ii)}  define a penalisation function, which penalises unfeasible solutions (i.e., violating a constraint).
 
 \section{Encoding of problems}\label{sect:encoding}
-In \cite{pricai22} we proposed an encoding of two well-known NP-complete problems in Abstract Argumentation (both considering the complete semantics, see Sect.~\ref{sect:bgarg}) as QUBO problems, which share the same complexity: the encoded problems are  
+
+\subsection{A Formulation in QUBO of  Acceptance Tasks}
+
+In \cite{pricai22} we proposed for the first time an encoding of two well-known NP-complete problems in Abstract Argumentation as QUBO problems:   
 $\dc\textit{-}\sigma$ and
 %$\mathit{\textbf{Exists}}\textit{-}\sigma$, and 
 $\mathit{\textbf{Exists}}\textit{-}\sigma^{\neg\varnothing}$, 
@@ -225,27 +237,23 @@ Moreover, in \cite{pricai22} we solved this problem on some frameworks directly 
 With respect to \cite{pricai22}, by continuing on this research line, we have extended the encoding to all classical NP-complete problems highlighted in bold in Tab.~\ref{sec:complexity}.
 Moreover, we have empirically validated all the encodings by comparing the obtained results with the simulated annealing algorithm against \emph{ConArg}~\cite{conarg}, an exact solver using \emph{Constraint Programming}.
 
-We then dedicated our attention to the 
- a the used simulated annealing against a with a with Harper++ and AFGCN. 
 
-\iffalse
-We first present a QUBO encoding of some of the Abstract Argumentation problems presented in Sect.~\ref{sect:background}. 
 
-We assign to each argument an index, hence $\args=\{a_1,\dots,$ $a_n\}$, where $n$ is the number of arguments. The encoding of problems in Abstract Argumentation uses
-a set of $n$ binary variables $x_1,\dots,x_n$ to represent a set $E$ of arguments.
-The meaning is that the argument
+We  present a QUBO encoding of some of the Abstract Argumentation problems  in Sect.~\ref{sect:background}. 
+We assign to each argument an index, hence $\args=\{a_1,\dots,$ $a_n\}$, where $n$ is the number of arguments. We use
+a set of $n$ binary variables $x_1,\dots,x_n$ to represent a set $E$ of arguments: 
 $a_i\in E$ if and only if $x_i=1$. We denote by $\underbar{x}$ the tuple $(x_1,\dots,x_n)$
 and by $\mathbf{x}\in\{0,1\}^n$ a vector of possible values for $x_1,\dots,x_n$.
-Each semantics $\sigma$ will be associated with a quadratic penalty function $P_{\sigma}$ such that $P_{\sigma}$ assumes its minimum value at $\mathbf{x}$ if and only if the corresponding set $E=\{a_i\in \args \,:\, x_i=1\}$ is an extension valid for $\sigma$. 
+Each semantics $\sigma$ will be associated with a quadratic penalisation function (or \emph{Pfunction} for short) $P_{\sigma}$ such that $P_{\sigma}$ assumes its minimum value at $\mathbf{x}$ if and only if the corresponding set $E=\{a_i\in \args \,:\, x_i=1\}$ is an extension valid for $\sigma$. 
 
-Most of the argumentation semantics require admissible sets. Hence, we define a penalty function $P_{adm}$ which enforces this property. $P_{adm}$ is the sum of 4 terms and contains new additional variables.
+Most of the argumentation semantics require admissible sets. Hence, we define a Pfunction $P_{adm}$ which enforces this property. $P_{adm}$ is the sum of four terms and contains new additional variables.
 The first term forces the set $E$ to be \textbf{conflict-free}:
 $ P_{cf}=\sum_{i \atts j \mbox{ or }\\
 	j \atts i} x_i x_j $. In fact, the value of $ P_{cf}$ corresponds to the number of self attacks in $E$
 and its value is $0$ if and only if $E$ is conflict-free. 
 
-The constraints to model the notion of \textbf{defense} are more complicated: we use a first set of additional variables $t_1,\dots,t_n$, denoting which arguments are attacked by $E$: $t_i=1$ if and only if $a_i$ is attacked by some argument of $E$. 
-The variables $d_1,\dots,d_n$ of the second set denote which arguments are defended by $E$: $d_i=1$ if and only if $a_i$ is defended (from all the possible attacks) by some arguments of $E$. For each argument $a_i$, the penalty function $P_{t}^i$ forces $t_i$ to be $1$ if and only if $a_i$ is attacked by $E$, i.e.,
+The constraints to model the notion of \textbf{defence} are more complicated: we use a first set of additional variables $t_1,\dots,t_n$, denoting which arguments are attacked by $E$: $t_i=1$ if and only if $a_i$ is attacked by some argument of $E$. 
+The variables $d_1,\dots,d_n$ of the second set denote which arguments are defended by $E$: $d_i=1$ if and only if $a_i$ is defended (from all the possible attacks) by some arguments of $E$. For each argument $a_i$, the Pfunction $P_{t}^i$ forces $t_i$ to be $1$ if and only if $a_i$ is attacked by $E$, i.e.,
 $t_i = \bigvee_{j \atts i} x_j$.
 
 Let $h_i$ be the number of attackers of $a_i$ and let $i_1,\dots,i_{h_i}$ be
@@ -260,7 +268,7 @@ $ +OR(\alpha_i^{h_i-3},x[i_{h_i-2}],\alpha_i^{h_i-2})+
 OR(\alpha_i^{h_i-2},x[i_{h_i-1}],x[i_{h_i}]), $, where $\alpha_i^1,\dots,\alpha_i^{h_i-2}$ are $h_i-2$ auxiliary binary variables.
 %Note that to avoid double or even triple subscripts, we use the notation $x[i_1]$ instead of $x_{i_1}$.
 
-The other penalty function $P_{d}^i$ forces $d_i$ to be $1$ if and only if $a_i$ is defended by $E$, i.e.,
+The other Pfunction $P_{d}^i$ forces $d_i$ to be $1$ if and only if $a_i$ is defended by $E$, i.e.,
 $ d_i = \bigwedge_{j \atts i} t_j $.
 If $h_i=0$, then $d_i$ is simply $1$, while if $h_i=1$, then $d_i=t_{h_1}$:
 in these cases, $P_{d}^i=0$.
@@ -276,17 +284,63 @@ The number of auxiliary variables needed for this encoding is hence $N=2n+2\sum_
 Note that, if $h=\max h_i$, then $N=O(nh)$.
 The final term $ P_{def}= \sum_{i=1}^n x_i(1-d_i) $
 forces each argument in $E$ to be defended by $E$.
-Summing up, the penalty function for \textbf{admissible} sets is
+Summing up, the Pfunction for \textbf{admissible} sets is
 $ P_{adm}=P_{cf}+ \sum_{i=1}^n P_t^i + \sum_{i=1}^n P_d^i 
 + P_{def}$.
 It is easy to prove that the minimum value of $P_{adm}$ is $0$ and the related values for $\underbar{x}$ correspond to admissible sets. For the \textbf{complete} semantics, we simply need to add an additional term to $P_{adm}$
 which forces all the arguments defended by $E$ to be elements of $E$:
 $ P_{co}=P_{adm} + \sum_{i=1}^n (1-x_i)d_i$.
 
-\fi
+\subsection{Formulation in QUBO of extension enforcement}
+
+The task of extension enforcement can be formulated with similar techniques.
+Let us focus on the strict version of this problem. 
+In order to simplify the notation, the arguments in the set $T$
+are the first $k$ arguments $a_1,\dots,a_k$ in $\args$.
+
+We use a first set of binary variables $r_{ij}$, for $i,j=1,\dots,n$.
+Each variable $r_{ij}$ is $1$ whether in the new attack relationship 
+$R'$, $a_i$ attacks $a_j$. Moreover, we use the binary variables $t_i$,
+for $i=1,\dots,n$, and $d_i$, for $i=1,\dots,k$, as in the
+encoding of the acceptance.
+
+We define a penalty function $P^r_{co}$ which is zero if and only
+if $T$ is complete set under the attack relationship described
+by $r_{ij}$. $P^r_{co}$ is the sum of $5$ terms.
+
+The first term 
+$P^r_{cf}=\sum_{i,j=1}^k r_{ij}$. 
+enforces the set $T$ to be conflict-free, in fact when $r_{ij}=1$,
+with $i,j\le k$, we have a self attack in $T$.
+
+The second term is $P^r_t=\sum_{i=1}^n P^{r,i}_{t}$, where 
+$P^{r,i}_{t}$, for each $i=1,\dots,n$, enforces the constraint
+$t_i=\bigvee_{j=1}^k r_{ji} $, which 
+means that $t_i=1$ if and only if the argument $a_i$
+is attacked by some argument $a_j\in T$. This term is encoded in QUBO using auxiliary binary variables, similar to what is done for
+$P^i_t$.
+
+The third term is $P^r_d=\sum_{i=1}^k P^{r,i}_{d}$, where $P^{r,i}_{d}$, for each $i=1,\dots,k$, enforces the constraint
+$d_i=\bigwedge_{j=1}^n (r_{ji} \implies t_j)$,  which 
+means that $d_i=1$ if and only if the argument $a_i\in T$
+is defended against all its attacker by some elements of $T$.
+This term is encoded in QUBO using a new set of auxiliary variables 
+to represent the implication $(r_{ji} \implies t_j)$, other
+than the same auxiliary variables used for $P^i_d$.
+
+The fourth term is simply $\sum_{i=1}^k (1-d_i)$, which requires
+that all arguments in $T$ are defended, while the last term
+is $\sum_{i=k+1}^n d_i$, which add a penality for each argument defended by $T$, but not belonging to $T$.
+
+The overall objective function to be minimized is
+$f=\sum_{a_i \atts a_j} (1-r_{ij}) + \sum_{\neg a_i \atts a_j} r_{ij} + \lambda P^r_{co}$,
+where $\lambda$ is a constant large, such that the minimum of $f$ is 
+obtained for $P^r_{co}=0$.
+
+
 
 \section{Conclusion}\label{sec:conclusion}
-
+We introduced NP-complete problems in Abstract Argumentation that may benefit from QUBO encodings and their solution on quantum annealers. We summarised only some of them, since others exist  that consider, for example, weighted arguments and/or attacks. Moreover, further investigation is needed to better exploit the hardware and the connections among qubits, which are limited on D-Wave’s architectures.
 
 \bibliographystyle{IEEEtran}
 \bibliography{main}
